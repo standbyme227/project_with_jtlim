@@ -10,15 +10,20 @@ class Human:
         self.age = age
         self.height = height
 
+        # 개인의 수치
         self.weight = weight
         self.fat = fat
         self.muscle = muscle
 
+        # 개인의 목표치
         self.target_fat = target_fat
         self.target_muscle = target_muscle
         self.target_weight = target_weight
 
+        # 개인의 운동량 한계치
         self.limit = None
+
+        # 개인의 운동량
         self.total_workout = None
 
     # 근육량과 지방량의 변화를 위한 메소드
@@ -46,11 +51,17 @@ class Human:
         limit_list = random.shuffle(limit_list)
         self.limit = limit_list.pop()
 
-    # 총 운동량을 더하는 메소드
-    def get_total_workout(self, workout_mount):
-        self.total_workout += workout_mount
+    # TODO:여기에 있는게 맞는걸까??? 일단은 workout으로 이동 (181102)
+    # # 총 운동량을 더하는 메소드
+    # def get_total_workout(self, workout_mount):
+    #     self.total_workout += workout_mount
+    #
+    # # 총 운동량을 줄이는 메소드
+    # def lose_total_workout(self):
+    #     self.total_workout -= 10
 
-    # 총 운동량을 줄이는 메소드
-    def lose_total_workout(self):
-        self.total_workout -= 10
+    def check_BMI(self, height, weight):
+        self.BMI = weight // (height ** 2)
+
+
 
