@@ -40,12 +40,12 @@ class Workout:
             human.weight += 0.2
             human.fatigue += 10
             human.set_bmi()
-            print(human.weight)
+            print(round(human.weight, 1))
         elif round(human.bmi) > 23:
             human.weight -= 0.2
             human.fatigue += 10
             human.set_bmi()
-            print(human.weight)
+            print(round(human.weight, 1))
         else:
             print("운동 끝!!!!!!")
 
@@ -56,7 +56,7 @@ class Workout:
 
 
 if __name__ == '__main__':
-    human = Human(1, 177, 74.0, fatigue=20)
+    human = Human(1, 177, 75.0, fatigue=20)
     human.set_bmi()
 
     workout = Workout(10)

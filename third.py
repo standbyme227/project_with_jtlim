@@ -60,7 +60,6 @@ class Human:
 
     # 비만도를 계산해서 넣어주는 로직이다.
     def set_bmi(self):
-        print(1)
         self.bmi = round(self.weight / ((self.height / 100) ** 2), 1)
         print("{}의 BMI는 {}".format(self.id, self.bmi))
         return self.bmi
@@ -119,29 +118,43 @@ class Workout:
 
 # TODO 181106 : Simulator를 구현하는 중이다.
 class Simulator:
-    # 운동이 들어가고
-    # 사람의 숫자 또는 사람들에대한 리스트가 들어갈 수 있다고 판단했다.
+    """
+        시뮬레이션을 위한 클래스
+
+        Attributes:
+            # workout (Workout())
+            # human_list (Human()의 List)
+    """
+
+
     def __init__(self, workout, number_of_people=0, human_list=[]):
+        """
+        한명뿐만이 아니라 다수에 사람에대해서 시뮬레이션을 해야하는 클래스이기에
+        인원수아니면 리스트형식으로 다중데이터를 소화하기위해서 구현하였다.
+
+        :param workout:
+        :param number_of_people:
+        :param human_list:
+        """
         self.workout = workout
-        self.human_list = self.set_people(number_of_people, human_list)
+        self.human_list = self.init_human_list(number_of_people, human_list)
 
-
-    def set_people(self, number_of_people, human_list):
+    def init_human_list(self, number_of_people, human_list):
         # [{id:id, height:height, weight:weight, fatigue:fatigue}, ]
-        id_list = []
+        human_id_list = []
         height_list = []
         weight_list = []
         fatigue_list = []
         if len(human_list) > 0:
             return human_list
         else:
-            id_list = [id_value for id_value in range(1, number_of_people + 1)]
+            human_id_list = [human_id for human_id in range(1, number_of_people + 1)]
             height_list = [height for height in range(150, 200)]
             weight_list = [weight for weight in range(40, 120)]
             fatigue_list = [fatigue for fatigue in range(0, 60)]
 
         human_list = []
-        for id in id_list:
+        for human_id in human_id_list:
             # random을 사용하면서 문제가 있었다. random suffle은 일종의 return값이 존재하지않는다.
             # 단순히 list를 섞을 뿐인데
             # x = random(x) 이렇게 사용했을시에 위에 말햇듯 반환값이 없어서 None이 선언된다.
@@ -153,43 +166,30 @@ class Simulator:
             # 이 부분은 말그대로 Human에 대한 정보 list를 만들기위한 로직이기에
             # dict형식으로 변경했다.
 
-            # human = Human(id, height_list[0], weight_list[0], fatigue_list[0])
-
-            human = {
-                'id' : id,
-                'height' : height_list[0],
-                'weight' : weight_list[0],
-                'fatigue' : fatigue_list[0],
-            }
+            human = Human(human_id, height_list[0], weight_list[0], fatigue_list[0])
+            # TODO 181106 Human class로 적용
             human_list.append(human)
         return human_list
 
     def simulate(self):
-        people = self.human_list
+        human_list = self.human_list
         workout = self.workout
-        for human_data in people:
-            human = Human(
-                id = human_data['id'],
-                height = human_data['height'],
-                weight = human_data['weight'],
-                fatigue= human_data['fatigue'],
-            )
-
+        for human_data in human_list:
             while workout.pt_count > 0:
-                if round(human.bmi) == 23:
-                    workout.exercise(human)
+                if round(human_data.bmi) == 23:
+                    workout.exercise(human_data)
                     print("{}일만에 Diet를 성공하셨네요!!! 남은 pt는 {}회 입니다.".format(workout.days, workout.pt_count))
                     break
 
-                if human.fatigue < 90:
+                if human_data.fatigue < 90:
                     workout.days += 1
                     workout.pt_count -= 1
                     print("운동을 시작하지")
-                    workout.exercise(human)
+                    workout.exercise(human_data)
                 else:
                     workout.days += 1
                     print("오늘은 좀 쉬어보자")
-                    workout.rest(human)
+                    workout.rest(human_data)
 
                 # while문이 끝난 경우
                 if workout.pt_count == 0:
