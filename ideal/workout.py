@@ -32,11 +32,11 @@ class Workout:
         self.rest(human)
 
     # 총 운동량을 더하는 메소드
-    def get_total_workout(self, workout_mount):
+    def get_total_workout(self, human, workout_mount):
         human.total_workout += workout_mount
 
     # 총 운동량을 줄이는 메소드
-    def lose_total_workout(self):
+    def lose_total_workout(self, human):
         human.total_workout -= 10
 
 
