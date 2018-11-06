@@ -98,12 +98,12 @@ class Workout:
             weight += 0.2
             fatigue += self.calculate_fatigue(human)
             human.set_bmi()
-            print(round(weight))
+            print(weight)
         elif round(bmi) > 23:
             weight -= 0.2
             fatigue += self.calculate_fatigue(human)
             human.set_bmi()
-            print(round(weight))
+            print(weight)
         else:
             print("운동 끝!!!!!!")
 
@@ -119,9 +119,12 @@ class Workout:
 
 # TODO 181106 : Simulator를 구현하는 중이다.
 class Simulator:
+    # 운동이 들어가고
+    # 사람의 숫자 또는 사람들에대한 리스트가 들어갈 수 있다고 판단했다.
     def __init__(self, workout, number_of_people=0, human_list=[]):
         self.workout = workout
         self.human_list = self.set_people(number_of_people, human_list)
+
 
     def set_people(self, number_of_people, human_list):
         # [{id:id, height:height, weight:weight, fatigue:fatigue}, ]
@@ -130,7 +133,7 @@ class Simulator:
         weight_list = []
         fatigue_list = []
         if len(human_list) > 0:
-            self.human_list = human_list
+            return human_list
         else:
             id_list = [id_value for id_value in range(1, number_of_people + 1)]
             height_list = [height for height in range(150, 200)]
@@ -159,13 +162,40 @@ class Simulator:
                 'fatigue' : fatigue_list[0],
             }
             human_list.append(human)
-        print(human_list)
+        return human_list
 
-    def get_human(self, human_list):
-        if human_list > 0:
-            return human_list[0]
+    def simulate(self):
+        people = self.human_list
+        workout = self.workout
+        for human_data in people:
+            human = Human(
+                id = human_data['id'],
+                height = human_data['height'],
+                weight = human_data['weight'],
+                fatigue= human_data['fatigue'],
+            )
 
-    # def simulate(self, ):
+            while workout.pt_count > 0:
+                if round(human.bmi) == 23:
+                    workout.exercise(human)
+                    print("{}일만에 Diet를 성공하셨네요!!! 남은 pt는 {}회 입니다.".format(workout.days, workout.pt_count))
+                    break
+
+                if human.fatigue < 90:
+                    workout.days += 1
+                    workout.pt_count -= 1
+                    print("운동을 시작하지")
+                    workout.exercise(human)
+                else:
+                    workout.days += 1
+                    print("오늘은 좀 쉬어보자")
+                    workout.rest(human)
+
+                # while문이 끝난 경우
+                if workout.pt_count == 0:
+                    print("{}일 동안 열심히 했지만 아직 목표치에 도달하지 못했네요 ㅠㅠ "
+                          "조금 더 노력하면 목표치에 도착할 수 있을거에요!!".format(workout.days))
+
 
 
 if __name__ == '__main__':
@@ -189,4 +219,5 @@ if __name__ == '__main__':
     #         workout.days += 1
     #         print("오늘은 좀 쉬어보자")
     #         workout.rest(human)
-    simulate = Simulator(workout, 5)
+    simulator = Simulator(workout, 2)
+    simulator.simulate()

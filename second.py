@@ -40,12 +40,12 @@ class Workout:
             human.weight += 0.2
             human.fatigue += 10
             human.set_bmi()
-            print(round(human.weight))
+            print(human.weight)
         elif round(human.bmi) > 23:
             human.weight -= 0.2
             human.fatigue += 10
             human.set_bmi()
-            print(round(human.weight))
+            print(human.weight)
         else:
             print("운동 끝!!!!!!")
 
@@ -56,7 +56,7 @@ class Workout:
 
 
 if __name__ == '__main__':
-    human = Human(1, 177, 75, fatigue=20)
+    human = Human(1, 177, 74.0, fatigue=20)
     human.set_bmi()
 
     workout = Workout(10)
@@ -76,3 +76,7 @@ if __name__ == '__main__':
             workout.days += 1
             print("오늘은 좀 쉬어보자")
             workout.rest(human)
+        # while문이 끝난 경우
+        if workout.pt_count == 0:
+            print("{}일 동안 열심히 했지만 아직 목표치에 도달하지 못했네요 ㅠㅠ "
+                  "조금 더 노력하면 목표치에 도착할 수 있을거에요!!".format(workout.days))
