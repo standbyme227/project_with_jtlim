@@ -75,39 +75,37 @@ class Workout:
     """
     days = 0
 
-    def __init__(self, pt_count):
-        self.human = None
+    def __init__(self, pt_count, human):
+        self.human = human
         self.pt_count = pt_count
 
-    def calculate_fatigue(self, human):
-        weight = human.weight
+    def calculate_fatigue(self):
+        weight = self.human.weight
         if weight > 80:
             fatigue = round(weight * 0.2)
         else:
             fatigue = round(weight * 0.15)
         return fatigue
 
-    def exercise(self, human):
+    def exercise(self):
         # set_bmi 부분을 Decorator로 구현할 수 있을 거 같다.
-        # TODO 181107 이 부분이 문제였다 단순히 수치만 대입될뿐....
-        bmi = human.bmi
-        weight = human.weight
-        fatigue = human.fatigue
+        human = self.human
         human.set_bmi()
-        if round(bmi) < 23:
-            weight += 0.2
-            fatigue += self.calculate_fatigue(human)
+        if round(human.bmi) < 23:
+            human.weight += 0.2
+            human.fatigue += self.calculate_fatigue()
             human.set_bmi()
-            print(weight)
-        elif round(bmi) > 23:
-            weight -= 0.2
-            fatigue += self.calculate_fatigue(human)
-            human.set_bmi()
-            print(weight)
+            print(human.weight)
+        elif round(human.bmi) > 23:
+            human.weight -= 0.2
+            human.fatigue += self.calculate_fatigue()
+            self.human.set_bmi()
+            print(human.weight)
         else:
             print("운동 끝!!!!!!")
 
-    def rest(self, human):
+    def rest(self):
+        human = self.human
         human.set_bmi()
         human.fatigue -= 20
         print(round(human.weight))
@@ -128,7 +126,7 @@ class Simulator:
     """
 
 
-    def __init__(self, workout, number_of_people=0, human_list=[]):
+    def __init__(self, number_of_people=0, human_list=[]):
         """
         한명뿐만이 아니라 다수에 사람에대해서 시뮬레이션을 해야하는 클래스이기에
         인원수아니면 리스트형식으로 다중데이터를 소화하기위해서 구현하였다.
@@ -137,7 +135,6 @@ class Simulator:
         :param number_of_people:
         :param human_list:
         """
-        self.workout = workout
         self.human_list = self.init_human_list(number_of_people, human_list)
 
     def init_human_list(self, number_of_people, human_list):
@@ -174,11 +171,11 @@ class Simulator:
 
     def simulate(self):
         human_list = self.human_list
-        workout = self.workout
         for human_data in human_list:
+            workout = Workout(10, human_data)
             while workout.pt_count > 0:
                 if round(human_data.bmi) == 23:
-                    workout.exercise(human_data)
+                    workout.exercise()
                     print("{}일만에 Diet를 성공하셨네요!!! 남은 pt는 {}회 입니다.".format(workout.days, workout.pt_count))
                     break
 
@@ -186,11 +183,11 @@ class Simulator:
                     workout.days += 1
                     workout.pt_count -= 1
                     print("운동을 시작하지")
-                    workout.exercise(human_data)
+                    workout.exercise()
                 else:
                     workout.days += 1
                     print("오늘은 좀 쉬어보자")
-                    workout.rest(human_data)
+                    workout.rest()
 
                 # while문이 끝난 경우
                 if workout.pt_count == 0:
@@ -203,7 +200,7 @@ if __name__ == '__main__':
     # human = Human(1, 177, 75, fatigue=20)
     # human.set_bmi()
     #
-    workout = Workout(10)
+
     #
     # while workout.pt_count > 0:
     #     if round(human.bmi) == 23:
@@ -220,5 +217,5 @@ if __name__ == '__main__':
     #         workout.days += 1
     #         print("오늘은 좀 쉬어보자")
     #         workout.rest(human)
-    simulator = Simulator(workout, 2)
+    simulator = Simulator(2)
     simulator.simulate()

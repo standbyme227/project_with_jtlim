@@ -1,12 +1,20 @@
 import random
-
+import ast
 # 사람들과 운동이 있으면, 자동으로 갱신되도록 해주는 클래스
 # 사람과 운동을 매칭시키고
 # 성공과 실패로 나눠서 txt에 저장시킨다.
 
-# TODO 181106 : Simulator를 구현하는 중이다.
 from human import Human
 from workout import Workout
+
+
+MIN_HEIGHT = 150
+MAX_HEIGHT = 200
+
+MIN_WEIGHT = 40
+MAX_WEIGHT = 120
+
+FILE_PATH = '/Users/shsf/Study/Project_with_jtlim/data/human_data_list.txt'
 
 
 class Simulator:
@@ -18,32 +26,112 @@ class Simulator:
             # human_list (Human()의 List)
     """
 
-    def __init__(self, number_of_people=0, human_list=[]):
+    def __init__(self, number_of_people=0):
         """
         한명뿐만이 아니라 다수에 사람에대해서 시뮬레이션을 해야하는 클래스이기에
         인원수아니면 리스트형식으로 다중데이터를 소화하기위해서 구현하였다.
 
-        :param workout:
-        :param number_of_people:
-        :param human_list:
+        :param (int) number_of_people: 인원수
+        :param human_data_list: dict형식으로 이뤄진 List
         """
-        self.human_list = self.init_human_list(number_of_people, human_list)
+        self.human_list = self.init_human_list(number_of_people)
         self.success = []
         self.failure = []
 
-    def init_human_list(self, number_of_people, human_list):
+    # def read_file(self):
+    #     read_f = open(FILE_PATH, 'r')
+    #     while True:
+    #         line = read_f.readline()
+    #         if not line: break
+    #         print(line)
+    #     read_f.close()
+    def check_file(self, FILE_PATH):
+        try:
+            read_file = open(FILE_PATH, 'r')
+        except FileNotFoundError:
+            return None
+
+        lines = read_file.readlines()
+        read_file.close()
+        return lines
+
+    def write_file(self, human):
+        human_data = self.get_human_str(human)
+        write_f = open("/Users/shsf/Study/Project_with_jtlim/data/human_data_list.txt", 'a')
+        write_f.write(str(human_data) + '\n')
+        write_f.close()
+
+    def check_id(self, human):
+        try:
+            read_f = open(FILE_PATH, 'r')
+        except FileNotFoundError:
+            read_f = None
+
+        if read_f:
+            while True:
+                line = read_f.read()
+                if not line: break
+                if "'id': " + str(human.id) + ',' in line:
+                    pass
+                else:
+                    self.write_file(human)
+            read_f.close()
+        else:
+            self.write_file(human)
+
+        # f = open("/Users/shsf/Study/Project_with_jtlim/data/human_data_list.txt", 'a')
+        # while True:
+        #     line = f.readline()
+        #     if not line: break
+        #     human_data = dict(line)
+        #     if human_data['id'] == human.id:
+        #         pass
+        #     else:
+        #         human_data = self.get_human_str(human)
+        #         f.write(str(human_data) + '\n')
+        #
+        # # 한줄씩 읽어서
+        # # human객체와 id 값을 비교한다.
+        # # 있는 사람이면 추가하지 않는다.
+        # f.close()
+
+    def get_human_str(self, human):
+        data = {
+            'id': human.id,
+            'height': human.height,
+            'weight': human.weight
+        }
+        return data
+
+    def get_human_list(self, human_data_list):
+        human_list = []
+        print(human_data_list)
+        for human_data in human_data_list:
+            human_data = ast.literal_eval(human_data)
+            human = Human(
+                id=human_data['id'],
+                height=human_data['height'],
+                weight=human_data['weight'],
+            )
+            human_list.append(human)
+        return human_list
+
+    # 일단 txt파일에 저장되어있는지 확인
+    # 있다면 그 파일의 내용을 불러와서 사용
+    # 없다면 새로운 human_list를 만들고, txt파일에 저장.
+
+    def init_human_list(self, number_of_people):
+
+        lines = self.check_file(FILE_PATH)
+
+        if lines and  len(lines) == number_of_people:
+            return self.get_human_list(lines)
+
         # [{id:id, height:height, weight:weight, fatigue:fatigue}, ]
-        human_id_list = []
-        height_list = []
-        weight_list = []
-        fatigue_list = []
-        if len(human_list) > 0:
-            return human_list
         else:
             human_id_list = [human_id for human_id in range(1, number_of_people + 1)]
-            height_list = [height for height in range(150, 200)]
-            weight_list = [weight for weight in range(40, 120)]
-            fatigue_list = [fatigue for fatigue in range(0, 60)]
+            height_list = [height for height in range(MIN_HEIGHT, MAX_HEIGHT)]
+            weight_list = [weight for weight in range(MIN_WEIGHT, MAX_WEIGHT)]
 
         human_list = []
         for human_id in human_id_list:
@@ -52,15 +140,19 @@ class Simulator:
             # x = random(x) 이렇게 사용했을시에 위에 말햇듯 반환값이 없어서 None이 선언된다.
             random.shuffle(height_list)
             random.shuffle(weight_list)
-            random.shuffle(fatigue_list)
 
             # TODO 181106 원래는 Human class의 객체를 여기서 집어넣었으나
             # 이 부분은 말그대로 Human에 대한 정보 list를 만들기위한 로직이기에
             # dict형식으로 변경했다.
 
-            human = Human(human_id, height_list[0], weight_list[0], fatigue_list[0])
-            # TODO 181106 Human class로 적용
+            # TODO 181106 Human class로 적용하기로 다시 변환
+            human = Human(human_id, height_list[0], weight_list[0])
             human_list.append(human)
+
+            # self.write_file(human)
+            self.check_id(human)
+            # self.read_file()
+
         return human_list
 
     def simulate(self):
@@ -71,7 +163,8 @@ class Simulator:
             while workout.pt_count > 0:
                 if round(human_data.bmi) == 23:
                     workout.exercise()
-                    print("{}일만에 Diet를 성공하셨네요!!! 남은 pt는 {}회 입니다.".format(workout.days, workout.pt_count))
+                    print("{}번 님, {}일만에 Diet를 성공하셨네요!!! 남은 pt는 {}회 입니다.".format(
+                        workout.human.id, workout.days, workout.pt_count))
                     self.success.append(workout.human)
                     break
 
@@ -85,13 +178,13 @@ class Simulator:
 
                 # while문이 끝난 경우
                 if workout.pt_count == 0:
-                    print("{}일 동안 열심히 했지만 아직 목표치에 도달하지 못했네요 ㅠㅠ "
-                          "조금 더 노력하면 목표치에 도착할 수 있을거에요!!".format(workout.days))
+                    print("{}번 님, {}일 동안 열심히 했지만 아직 목표치에 도달하지 못했네요 ㅠㅠ "
+                          "조금 더 노력하면 목표치에 도착할 수 있을거에요!!".format(workout.human.id, workout.days))
                     self.failure.append(workout.human)
 
 
 if __name__ == '__main__':
-    simulator = Simulator(10000)
+    simulator = Simulator(100)
     simulator.simulate()
     print(
         "{}명 성공, {}명 실패".format(len(simulator.success), len(simulator.failure))

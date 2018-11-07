@@ -12,7 +12,7 @@ class Human:
 
     """
 
-    def __init__(self, id, height, weight, fatigue):
+    def __init__(self, id, height, weight, fatigue=0):
         self.id = id
         self.height = height
         self.weight = weight
@@ -22,8 +22,8 @@ class Human:
 
     # TODO 181106 : 좀 더 객체의 내용을 알기 쉽도록 __str__을 구현했다.
     def __str__(self):
-        return "id : {}, height : {}, weight : {}, fatigue : {}, bmi : {}".format(
-            self.id, self.height, self.weight, self.fatigue, self.bmi)
+        return "id : {}, height : {}, weight : {}, fatigue : {}".format(
+            self.id, self.height, self.weight, self.fatigue)
 
     # 비만도를 계산해서 넣어주는 로직이다.
     def set_bmi(self):
