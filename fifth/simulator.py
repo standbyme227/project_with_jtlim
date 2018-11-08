@@ -7,14 +7,14 @@ import ast
 from human import Human
 from workout import Workout
 
-
 MIN_HEIGHT = 150
 MAX_HEIGHT = 200
 
 MIN_WEIGHT = 40
 MAX_WEIGHT = 120
 
-FILE_PATH = '/Users/shsf/Study/Project_with_jtlim/fourth/data/human_data_list.txt'
+CURRENT_PATH = '/Users/shsf/Study/Project_with_jtlim/fifth'
+FILE_PATH = CURRENT_PATH + '/data/human_data_list.txt'
 
 
 class Simulator:
@@ -38,13 +38,6 @@ class Simulator:
         self.success = []
         self.failure = []
 
-    # def read_file(self):
-    #     read_f = open(FILE_PATH, 'r')
-    #     while True:
-    #         line = read_f.readline()
-    #         if not line: break
-    #         print(line)
-    #     read_f.close()
     def check_file(self, FILE_PATH):
         try:
             read_file = open(FILE_PATH, 'r')
@@ -79,22 +72,6 @@ class Simulator:
         else:
             self.write_file(human)
 
-        # f = open("/Users/shsf/Study/Project_with_jtlim/data/human_data_list.txt", 'a')
-        # while True:
-        #     line = f.readline()
-        #     if not line: break
-        #     human_data = dict(line)
-        #     if human_data['id'] == human.id:
-        #         pass
-        #     else:
-        #         human_data = self.get_human_str(human)
-        #         f.write(str(human_data) + '\n')
-        #
-        # # 한줄씩 읽어서
-        # # human객체와 id 값을 비교한다.
-        # # 있는 사람이면 추가하지 않는다.
-        # f.close()
-
     def get_human_str(self, human):
         data = {
             'id': human.id,
@@ -124,7 +101,7 @@ class Simulator:
 
         lines = self.check_file(FILE_PATH)
 
-        if lines and  len(lines) == number_of_people:
+        if lines and len(lines) == number_of_people:
             return self.get_human_list(lines)
 
         # [{id:id, height:height, weight:weight, fatigue:fatigue}, ]
