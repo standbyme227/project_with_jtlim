@@ -15,30 +15,43 @@ class Workout:
         self.human = human
         self.pt_count = pt_count
 
+    # TODO 181108 표준체중 산출하는 함수 추가. _done
+    # 추가했었는데 human에 있는게 맞는가 같아서 이동
+    # def calculate_standard_weight(self, human):
+    #     return (human.height - 100) * 0.95
+
+    # TODO 181108 fatigue 로직 정교하게 설계. _done
+    # 이 부분도 human에 있는게 맞는 거 같아서 이동
+    # def calculate_fatigue(self):
+    #     human = self.human
+    #     weight = human.weight
+    #     if weight > 120:
+    #         fatigue = round(weight * 0.25)
+    #     elif weight > 100:
+    #         fatigue = round(weight * 0.22)
+    #     elif weight > 80:
+    #         fatigue = round(weight * 0.20)
+    #     elif weight > human.calculate_standard_weight() - 10:
+    #         fatigue = round(weight * 0.15)
+    #     else:
+    #         fatigue = round(weight * 0.22)
+    #     return fatigue
 
 
-    def calculate_fatigue(self):
-        human = self.human
-        weight = human.weight
-        if weight > 80:
-            fatigue = round(weight * 0.2)
-        else:
-            fatigue = round(weight * 0.15)
-        return fatigue
-
+    # TODO 181109 유산소와 근력운동으로 분할해서 운동을 시행하도록 수정
     def exercise(self):
         human = self.human
 
         human.set_bmi()
         if round(human.bmi) < 23:
             human.weight += 0.2
-            human.fatigue += self.calculate_fatigue()
+            human.fatigue += human.calculate_fatigue()
             human.set_bmi()
             # print(human.weight)
 
         elif round(human.bmi) > 23:
             human.weight -= 0.2
-            human.fatigue += self.calculate_fatigue()
+            human.fatigue += human.calculate_fatigue()
             human.set_bmi()
             # print(human.weight)
         else:
@@ -52,9 +65,15 @@ class Workout:
 
 
 if __name__ == '__main__':
-    human = Human(1, 177, 75.0, fatigue=20)
+    human = Human(
+        id=1,
+        height=177,
+        muscle=50,
+        fat=30,
+        fatigue=20,
+        endurance=2,
+    )
     workout = Workout(10, human)
-
 
     while workout.pt_count > 0:
         human = workout.human
