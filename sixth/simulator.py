@@ -18,12 +18,12 @@ FILE_PATH = CURRENT_PATH + '/data/human_data_list.txt'
 
 
 class Simulator:
-    """
-        시뮬레이션을 위한 클래스
+    """시뮬레이션을 위한 클래스
 
         Attributes:
             # workout (Workout())
             # human_list (Human()의 List)
+
     """
 
     def __init__(self, number_of_people=0):

@@ -6,8 +6,8 @@ class Workout:
         운동에 대한 클래스
 
         Attributes :
-            # human (Human()) : Human 클래스의 인스턴스여야한다.
-            # pt_count = 운동할 횟수를 지정 할 수 있다.
+            human (Human): Human 클래스의 인스턴스여야한다.
+            pt_count (int): 운동할 횟수를 지정 할 수 있다.
     """
     days = 0
 

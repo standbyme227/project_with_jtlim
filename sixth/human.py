@@ -3,14 +3,6 @@ class Human:
         운동할 사람(?)에 대한 클래스.
         property를 사용해서 0이하의 값이나 실존가능한 최대값을 한정지었다.
 
-        Attributes :
-            # id (int): 구분자 역할.
-            # height (int) : 키
-            # weight (int) : 몸무게
-            # endurance (int) : 인내력
-            # fatigue (int) : 운동을 할때 피로도로 그 횟수를 제한할 수 있게 구현.
-            # bmi : 비만도
-
     """
 
     # TODO 20181108 Human에 대한 주석 처리 _done
@@ -34,39 +26,48 @@ class Human:
             fat : 지방량
             endurance:
             fatigue:
+
+        Attributes :
+            # id (int): 구분자 역할.
+            # height (int) : 키
+            # weight (int) : 몸무게
+            # endurance (int) : 인내력
+            # fatigue (int) : 운동을 할때 피로도로 그 횟수를 제한할 수 있게 구현.
+            # bmi : 비만도
         """
         self.id = id
         self.height = height
         self.muscle = muscle
         self.fat = fat
-        self.weight = self.set_weight(muscle, fat)
+        self.weight = self.get_calculated_weight()
         self.fatigue = fatigue
         self.endurance = endurance
         # TODO 181106 : 예시를 보고했으나, 이렇게 넣어도 되는건지 확실치가 않다. _done
-        self.bmi = self.set_bmi()
+        self.bmi = self.get_calculated_bmi()
 
     # TODO 181106 : 좀 더 객체의 내용을 알기 쉽도록 __str__을 구현했다.
     def __str__(self):
-        return "id : {}, height : {}, weight : {}, fatigue : {}, bmi : {}".format(
+        # TODO 181109 : formatting을 할때 Default 글자수를 지정할 수가 있다.
+        return "id : {:<5}, height : {:<4}, weight : {:<4}, fatigue : {:<5}, bmi : {:<5}".format(
             self.id, self.height, self.weight, self.fatigue, self.bmi)
 
-    def set_weight(self, muscle, fat):
+    def get_calculated_weight(self):
         mineral = 3.2
-        weight = muscle + fat + mineral
+        weight = self.muscle + self.fat + mineral
         return weight
 
-    def calculate_standard_weight(self):
+    def get_calculated_standard_weight(self):
         return (self.height - 100) * 0.95
 
     # 비만도를 계산해서 넣어주는 로직이다.
-    def set_bmi(self):
+    def get_calculated_bmi(self):
         self.bmi = round(self.weight / ((self.height / 100) ** 2), 1)
         # print("{}의 BMI는 {}".format(self.id, self.bmi))
         return self.bmi
 
     # endurance를 0으로 되돌리는 로직이다.
     # TODO 20181108 한달에 한번씩 reset시켜야하기 때문에
-    def reset_endurance(self):
+    def get_reseted_endurance(self):
         self.endurance = 0
 
     def add_endurance(self):
@@ -80,7 +81,7 @@ class Human:
             fatigue = round(weight * 0.22)
         elif weight > 80:
             fatigue = round(weight * 0.20)
-        elif weight > self.calculate_standard_weight() - 10:
+        elif weight > self.get_calculated_standard_weight() - 10:
             fatigue = round(weight * 0.15)
         else:
             fatigue = round(weight * 0.22)
@@ -157,6 +158,6 @@ if __name__ == '__main__':
     )
 
     print(
-        "첫번째 사람은 {}, "
+        "첫번째 사람은 {}, \n"
         "두번째 사람은 {}. ".format(human1, human2)
     )
