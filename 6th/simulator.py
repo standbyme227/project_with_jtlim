@@ -141,7 +141,7 @@ class Simulator:
                 if round(human_data.bmi) == 23:
                     workout.exercise()
                     print("{}번 님, {}일만에 Diet를 성공하셨네요!!! 남은 pt는 {}회 입니다.".format(
-                        workout.human.id, workout.days, workout.pt_count))
+                        workout.human.id.ljust(4), workout.days.ljust(4), workout.pt_count.ljust(4)))
                     self.success.append(workout.human)
                     break
 
@@ -156,7 +156,7 @@ class Simulator:
                 # while문이 끝난 경우
                 if workout.pt_count == 0:
                     print("{}번 님, {}일 동안 열심히 했지만 아직 목표치에 도달하지 못했네요 ㅠㅠ "
-                          "조금 더 노력하면 목표치에 도착할 수 있을거에요!!".format(workout.human.id, workout.days))
+                          "조금 더 노력하면 목표치에 도착할 수 있을거에요!!".format(workout.human.id.ljust(4), workout.days.ljust(4)))
                     self.failure.append(workout.human)
 
 

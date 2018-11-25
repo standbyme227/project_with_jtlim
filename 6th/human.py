@@ -1,7 +1,8 @@
 class Human:
-    """
-        운동할 사람(?)에 대한 클래스.
-        property를 사용해서 0이하의 값이나 실존가능한 최대값을 한정지었다.
+    """운동할 사람(?)에 대한 클래스.
+
+    Note: property를 사용해서 0이하의 값이나 실존가능한 최대값을 한정지었다.
+
 
     """
 
@@ -10,7 +11,7 @@ class Human:
     # TODO 20181108 Human에 지방량 추가(optional). _done
     # TODO 20181108 Human에 근육량과 지방량으로 weight를 산출하는 로직 추가 _done
     # TODO 20181108 Workout에 근육량이 증가하는 로직 추가 _done
-
+    # TODO 20181119 전체적인 주석 처리 수정(alms에 맞게)
     def __init__(
             self, id, height,
             muscle, fat,
@@ -29,6 +30,8 @@ class Human:
 
         Attributes :
             # id (int): 구분자 역할.
+            # muscle : 근육량
+            # fat : 지방량
             # height (int) : 키
             # weight (int) : 몸무게
             # endurance (int) : 인내력
@@ -42,7 +45,6 @@ class Human:
         self.weight = self.get_calculated_weight()
         self.fatigue = fatigue
         self.endurance = endurance
-        # TODO 181106 : 예시를 보고했으나, 이렇게 넣어도 되는건지 확실치가 않다. _done
         self.bmi = self.get_calculated_bmi()
 
     # TODO 181106 : 좀 더 객체의 내용을 알기 쉽도록 __str__을 구현했다.
@@ -52,23 +54,70 @@ class Human:
             self.id, self.height, self.weight, self.fatigue, self.bmi)
 
     def get_calculated_weight(self):
+        """instance의 체중을 계산해서 반환하는 함수
+
+        Notes:
+            instance attribute를 바탕으로 동작하는 함수라서 arguments없이 동작합니다.
+
+        Args:
+            -
+
+        Returns:
+            weight (float)
+
+        """
+        # 인간이 가지고 있는 무기질의 양.
         mineral = 3.2
+
         weight = self.muscle + self.fat + mineral
         return weight
 
     def get_calculated_standard_weight(self):
-        return (self.height - 100) * 0.95
+        """instance의 표준 몸무게는 계산해서 반환하는 함수
+
+        Notes:
+            instance attribute를 바탕으로 동작하는 함수라서 arguments없이 동작합니다.
+
+        Args:
+            -
+
+        Returns:
+            standard_weight (float)
+
+        """
+        standard_weight = (self.height - 100) * 0.95
+
+        return standard_weight
 
     # 비만도를 계산해서 넣어주는 로직이다.
     def get_calculated_bmi(self):
-        self.bmi = round(self.weight / ((self.height / 100) ** 2), 1)
-        # print("{}의 BMI는 {}".format(self.id, self.bmi))
-        return self.bmi
+        """비만도를 계산해서 self.bmi에 할당하는 함수.
+
+        Notes:
+            instance attribute를 바탕으로 동작하는 함수라서 arguments없이 동작합니다.
+
+        Args:
+            -
+
+        Returns:
+            -
+
+        """
+
+        bmi = round(self.weight / ((self.height / 100) ** 2), 1)
+        self.bmi = bmi
 
     # endurance를 0으로 되돌리는 로직이다.
     # TODO 20181108 한달에 한번씩 reset시켜야하기 때문에
     def get_reseted_endurance(self):
-        self.endurance = 0
+        """endurance를 0으로 reset해서 self.bmi에 할당하는 함수
+
+        Notes:
+
+        Returns:
+        """
+        reseted_endurance = 0
+        self.endurance = reseted_endurance
 
     def add_endurance(self):
         self.endurance += 1
@@ -139,7 +188,7 @@ class Human:
         self._endurance = 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     human1 = Human(
         id=1,
         height=177,
